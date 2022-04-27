@@ -1,13 +1,29 @@
-clients = ["Miguel", "Jose", "Carlos"]
+clients: list = ["Miguel", "Jose", "Carlos"]
+
+
+def _get_client_name():
+    """
+    Return a username
+    """
+    return input("What is the client name: ")
 
 
 def _get_client_id():
+    """
+    Get a user id
+    """
     client_id: str = input('- Write client id: ')
     return client_id
 
 
-def _update_client():
-    pass
+def _update_client(client_id: str):
+    global clients
+    new_client_name: str = input('\bUpdate client name: ')
+
+    if client_id in clients:
+        clients[clients.index(client_id)] = _add_comma(new_client_name)
+    else:
+        print('Client are not in the client list.')
 
 
 def _create_client():
@@ -15,7 +31,7 @@ def _create_client():
     
     request: bool = True
     while request:
-        name: str = input("Please, write client's name: ")
+        name: str = _get_client_name()
         if name not in clients:
             clients.append(name)
         else:
@@ -75,7 +91,9 @@ def run():
     elif command == 'd':
         print('We are on BETA version, more updates soon!')
     elif command == 'u':
-        _update_client()
+        client = _get_client_name()
+        _update_client(client)
+
         list_clients()
     else:
         print('Invalid command, please select an available option')
