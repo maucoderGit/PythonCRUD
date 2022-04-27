@@ -1,25 +1,35 @@
 clients = ["Miguel", "Jose", "Carlos"]
 
+
+def _get_client_id():
+    client_id: str = input('- Write client id: ')
+    return client_id
+
+
+def _update_client():
+    pass
+
+
 def _create_client():
     global clients
     
-    request = True
-    while request == True:
-        name:str = input("Please, write client's name: ")
+    request: bool = True
+    while request:
+        name: str = input("Please, write client's name: ")
         if name not in clients:
             clients.append(name)
         else:
             print(f'Client "{name}" already is in the client\'s list')
         
-        request = input("Do you want to continue? Y/N: ")
-        request = request.upper()
+        user_chose = input("Do you want to continue? Y/N: ")
+        user_chose = user_chose.upper()
         
-        if request == "Y" or request == "YES":
+        if user_chose == "Y" or user_chose == "YES":
             request = True
-        elif request == "N" or request == "NO":
+        elif user_chose == "N" or user_chose == "NO":
             request = False
             print("-"*50)
-            print("\nOk! Request Completed sucefully")
+            print("\nOk! Request Completed successfully")
         else:
             request = False
             print("Stopping...")
@@ -29,7 +39,7 @@ def _add_comma(user_var):
     """Add a comma with space to a var string
 
     Args:
-        user_var str: String with names, phares or content
+        user_var str: String with names, phrases or content
 
     Returns:
         str: return a string with coma and space on the end
@@ -44,13 +54,16 @@ def list_clients():
     
     print(clients)
 
+
 def _print_welcome():
     print('Welcome to CMT POS')
     print('-'*50)
     print('What would you like to do today')
-    print('[C]reate clients - write "C"')
-    print('[D]elete clients - write "D"')
-    
+    print('Create clients - Write "C"')
+    print('Update clients - Write "U"')
+    print('Delete clients - Write "D"')
+
+
 def run():
     _print_welcome()
 
@@ -61,8 +74,12 @@ def run():
         list_clients()
     elif command == 'd':
         print('We are on BETA version, more updates soon!')
+    elif command == 'u':
+        _update_client()
+        list_clients()
     else:
-        print('Invalid command, please select an avalible option')
+        print('Invalid command, please select an available option')
+
 
 if __name__ == '__main__':
     run()
