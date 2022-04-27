@@ -85,7 +85,9 @@ def _read_clients():
         list_clients()
     elif chose == 'f':
         target = _get_client_name()
-        search_user(target, clients)
+        found = search_user(target, clients)
+        if found:
+            print(f'The client {target} was found!')
     else:
         print('Ups! We don\'t have that option. \bPlease send feedback at @maucoder on twitter to more updates!')
 
@@ -105,18 +107,17 @@ def list_clients():
 
 
 def search_user(target, current_list):
-    if target in current_list:
-        target_index = current_list.index(target)
-        print('We find it!\b')
-        print(current_list[target_index])
-    else:
-        print('I don\'t find target client, must be added?')
-        user_chose: str = input('Write Y/N to add: ').upper()
+    for i in current_list:
+        if i == target:
+            return True
 
-        if user_chose == 'Y':
-            _create_client()
-        else:
-            print("Stopping...")
+    print('I don\'t find target client, must I add it?')
+    user_chose: str = input('Write Y/N to add: ').upper()
+
+    if user_chose == 'Y':
+        _create_client()
+    else:
+        print("Stopping...")
 
 
 def run():
