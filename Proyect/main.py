@@ -16,16 +16,6 @@ def _get_client_id():
     return client_id
 
 
-def _update_client(client_id: str):
-    global clients
-    new_client_name: str = input('\bUpdate client name: ')
-
-    if client_id in clients:
-        clients[clients.index(client_id)] = _add_comma(new_client_name)
-    else:
-        print('Client are not in the client list.')
-
-
 def _create_client():
     global clients
     
@@ -49,8 +39,27 @@ def _create_client():
         else:
             request = False
             print("Stopping...")
-            
-            
+
+
+def _delete_client(client_id):
+    global clients
+
+    if client_id in clients:
+        clients.remove(client_id)
+        list_clients()
+    else:
+        print('Client isn\'t in the client list.')
+
+
+def _update_client(client_id: str):
+    global clients
+    if client_id in clients:
+        new_client_name: str = input('\bUpdate client name: ')
+        clients[clients.index(client_id)] = new_client_name
+    else:
+        print('Client is not in the client list.')
+
+
 def _add_comma(user_var):
     """Add a comma with space to a var string
 
@@ -89,7 +98,9 @@ def run():
         _create_client()
         list_clients()
     elif command == 'd':
-        print('We are on BETA version, more updates soon!')
+        client = _get_client_name()
+
+        _delete_client(client)
     elif command == 'u':
         client = _get_client_name()
         _update_client(client)
