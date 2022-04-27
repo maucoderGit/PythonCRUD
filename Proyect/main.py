@@ -1,19 +1,18 @@
 clients: list = ["Miguel", "Jose", "Carlos"]
 
 
-def _get_client_name():
-    """
-    Return a username
-    """
-    return input("What is the client name: ")
+def _add_comma(user_var):
+    """Add a comma with space to a var string
 
+    Args:
+        user_var str: String with names, phrases or content
 
-def _get_client_id():
+    Returns:
+        str: return a string with coma and space on the end
     """
-    Get a user id
-    """
-    client_id: str = input('- Write client id: ')
-    return client_id
+    user_var += ", "
+
+    return user_var
 
 
 def _create_client():
@@ -44,40 +43,42 @@ def _create_client():
 def _delete_client(client_id):
     global clients
 
-    if client_id in clients:
+    if is_in_list(client_id, clients):
         clients.remove(client_id)
         list_clients()
     else:
         print('Client isn\'t in the client list.')
 
 
+def _get_client_id():
+    """
+    Get a user id
+    """
+    client_id: str = input('- Write client id: ')
+    return client_id
+
+
+def _get_client_name():
+    """
+    Return a username
+    """
+    return input("What is the client name: ")
+
+
+def is_in_list(value, data_list):
+    if value in data_list:
+        return True
+    else:
+        return False
+
+
 def _update_client(client_id: str):
     global clients
-    if client_id in clients:
+    if is_in_list(client_id, clients):
         new_client_name: str = input('\bUpdate client name: ')
         clients[clients.index(client_id)] = new_client_name
     else:
         print('Client is not in the client list.')
-
-
-def _add_comma(user_var):
-    """Add a comma with space to a var string
-
-    Args:
-        user_var str: String with names, phrases or content
-
-    Returns:
-        str: return a string with coma and space on the end
-    """
-    user_var += ", "
-    
-    return user_var
-
-
-def list_clients():
-    global clients
-    
-    print(clients)
 
 
 def _print_welcome():
@@ -87,6 +88,12 @@ def _print_welcome():
     print('Create clients - Write "C"')
     print('Update clients - Write "U"')
     print('Delete clients - Write "D"')
+
+
+def list_clients():
+    global clients
+
+    print(clients)
 
 
 def run():
