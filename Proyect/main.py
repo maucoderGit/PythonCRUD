@@ -16,8 +16,6 @@ def _add_comma(user_var):
 
 
 def _create_client():
-    global clients
-    
     request: bool = True
     while request:
         name: str = _get_client_name()
@@ -41,8 +39,6 @@ def _create_client():
 
 
 def _delete_client(client_id):
-    global clients
-
     if is_in_list(client_id, clients):
         clients.remove(client_id)
         list_clients()
@@ -73,7 +69,6 @@ def is_in_list(value, data_list):
 
 
 def _update_client(client_id: str):
-    global clients
     if is_in_list(client_id, clients):
         new_client_name: str = input('\bUpdate client name: ')
         clients[clients.index(client_id)] = new_client_name
@@ -81,22 +76,51 @@ def _update_client(client_id: str):
         print('Client is not in the client list.')
 
 
+def _read_clients():
+    print('[s] to show this list')
+    print('[f] to find a client')
+    chose: str = input('Please, chose one: ').lower()
+
+    if chose == 's':
+        list_clients()
+    elif chose == 'f':
+        target = _get_client_name()
+        search_user(target, clients)
+    else:
+        print('Ups! We don\'t have that option. \bPlease send feedback at @maucoder on twitter to more updates!')
+
+
 def _print_welcome():
     print('Welcome to CMT POS')
     print('-'*50)
     print('What would you like to do today')
     print('Create clients - Write "C"')
+    print('Show clients - Write "R"')
     print('Update clients - Write "U"')
     print('Delete clients - Write "D"')
 
 
 def list_clients():
-    global clients
-
     print(clients)
 
 
+def search_user(target, current_list):
+    if target in current_list:
+        target_index = current_list.index(target)
+        print('We find it!\b')
+        print(current_list[target_index])
+    else:
+        print('I don\'t find target client, must be added?')
+        user_chose: str = input('Write Y/N to add: ').upper()
+
+        if user_chose == 'Y':
+            _create_client()
+        else:
+            print("Stopping...")
+
+
 def run():
+    global clients
     _print_welcome()
 
     command = input("\nYour chose: ").lower()
@@ -104,6 +128,8 @@ def run():
     if command == 'c':
         _create_client()
         list_clients()
+    elif command == 'r':
+        _read_clients()
     elif command == 'd':
         client = _get_client_name()
 
