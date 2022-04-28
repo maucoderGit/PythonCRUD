@@ -1,3 +1,4 @@
+import sys
 clients: list = ["Miguel", "Jose", "Carlos"]
 
 
@@ -61,8 +62,16 @@ def _get_client_name():
     client_name = None
 
     while not client_name:
+        print(f'{"-" * 20} # insert "exit" to break')
         client_name = str(input('Client\'s name: '))
-        
+
+        if client_name.lower() == 'exit':
+            client_name = None
+            break
+
+    if not client_name:
+        sys.exit()
+
     return client_name
 
 
