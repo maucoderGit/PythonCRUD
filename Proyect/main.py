@@ -58,7 +58,12 @@ def _get_client_name():
     """
     Return a username
     """
-    return input("What is the client name: ")
+    client_name = None
+
+    while not client_name:
+        client_name = str(input('Client\'s name: '))
+        
+    return client_name
 
 
 def is_in_list(value, data_list):
