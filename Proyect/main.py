@@ -1,19 +1,5 @@
 import sys
-clients: list = ["Miguel", "Jose", "Carlos"]
-
-
-def _add_comma(user_var):
-    """Add a comma with space to a var string
-
-    Args:
-        user_var str: String with names, phrases or content
-
-    Returns:
-        str: return a string with coma and space on the end
-    """
-    user_var += ", "
-
-    return user_var
+clients: list = []
 
 
 def _create_client():
@@ -40,7 +26,7 @@ def _create_client():
 
 
 def _delete_client(client_id):
-    if is_in_list(client_id, clients):
+    if client_id in clients:
         clients.remove(client_id)
         list_clients()
     else:
@@ -75,17 +61,12 @@ def _get_client_name():
     return client_name
 
 
-def is_in_list(value, data_list):
-    if value in data_list:
-        return True
-    else:
-        return False
-
-
 def _update_client(client_id: str):
-    if is_in_list(client_id, clients):
+    if client_id in clients:
         new_client_name: str = input('\bUpdate client name: ')
-        clients[clients.index(client_id)] = new_client_name
+
+        index = clients.index(client_id)
+        clients[index] = new_client_name
     else:
         print('Client is not in the client list.')
 
@@ -99,9 +80,10 @@ def _read_clients():
         list_clients()
     elif chose == 'f':
         target = _get_client_name()
-        found = search_user(target, clients)
-        if found:
+        if target in clients:
             print(f'The client {target} was found!')
+        else:
+            print(f'The client was not found')
     else:
         print('Ups! We don\'t have that option. \bPlease send feedback at @maucoder on twitter to more updates!')
 
@@ -117,21 +99,8 @@ def _print_welcome():
 
 
 def list_clients():
-    print(clients)
-
-
-def search_user(target, current_list):
-    for i in current_list:
-        if i == target:
-            return True
-
-    print('I don\'t find target client, must I add it?')
-    user_chose: str = input('Write Y/N to add: ').upper()
-
-    if user_chose == 'Y':
-        _create_client()
-    else:
-        print("Stopping...")
+    for idx, client in enumerate(clients):
+        print(f'{idx}: {client}')
 
 
 def run():
