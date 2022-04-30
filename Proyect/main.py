@@ -160,7 +160,7 @@ def _print_welcome():
 
 def list_clients():
     for idx, client in enumerate(clients):
-        print(f'{idx}: {client["name"]}')
+        print(f'{idx}: {client["name"]} | {client["company"]} | {client["email"]} | {client["position"]}')
 
 
 def run():
