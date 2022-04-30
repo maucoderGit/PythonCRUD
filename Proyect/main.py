@@ -1,15 +1,40 @@
 import sys
-clients: list = []
+clients: list = [
+    {
+        'name': 'Pablo',
+        'company': 'Google',
+        'email': 'pablo@google.com',
+        'position': 'Software engineer',
+    },
+    {
+        'name': 'Mauricio',
+        'company': 'Reserve',
+        'email': 'mauricio@reserve.com',
+        'position': 'Backend developer',
+    }
+]
+
+
+def _get_client_data():
+    client: dict = {
+        'name': _get_client_field('name'),
+        'company': _get_client_field('company'),
+        'email': _get_client_field('email'),
+        'position': _get_client_field('position')
+    }
+
+    return client
 
 
 def _create_client():
     request: bool = True
     while request:
-        name: str = _get_client_name()
-        if name not in clients:
-            clients.append(name)
+        client = _get_client_data()
+
+        if client not in clients:
+            clients.append(client)
         else:
-            print(f'Client "{name}" already is in the client\'s list')
+            print(f'Client "{client["name"]}" already is in the client\'s list')
         
         user_chose = input("Do you want to continue? Y/N: ")
         user_chose = user_chose.upper()
@@ -26,47 +51,80 @@ def _create_client():
 
 
 def _delete_client(client_id):
-    if client_id in clients:
-        clients.remove(client_id)
-        list_clients()
+    is_valid, index = client_id
+
+    if is_valid:
+        client = clients[index]
+        while True:
+            confirm = input(f"Are you secure to remove {client['name']} from client\'s data?: ").upper()
+            if confirm == "YES":
+                print(f'{index}: {clients[index]} was delete')
+
+                del(clients[index])
+                list_clients()
+                break
+            elif confirm == "NO":
+                print("Stopping...")
+                break
+            else:
+                print('Print Yes or No to continue')
     else:
         print('Client isn\'t in the client list.')
 
 
-def _get_client_id():
+def _get_client_id() -> list[bool, int]:
     """
-    Get a user id
+    Get a user integer id
     """
-    client_id: str = input('- Write client id: ')
-    return client_id
+    is_logic: bool = False
+
+    while not is_logic:
+        try:
+            # If the user sent a not valid value, use exception for error's prevention
+            client_id: int = int(input('- Write client id: '))
+            is_valid = True
+
+            if clients[client_id] not in clients:
+                print('Sorry, that index is out of range or was not found')
+                is_valid = False
+
+            return [is_valid, client_id]
+
+        except IndexError:
+            print('Please write a valid index')
+
+        except ValueError:
+            print('Please write a number.\n')
 
 
-def _get_client_name():
+def _get_client_field(data):
     """
     Return a username
     """
-    client_name = None
+    client_info = None
 
-    while not client_name:
+    while not client_info:
         print(f'{"-" * 20} # insert "exit" to break')
-        client_name = str(input('Client\'s name: '))
+        client_info = str(input(f'Client\'s {data}: '))
 
-        if client_name.lower() == 'exit':
-            client_name = None
+        if client_info.lower() == 'exit':
+            client_info = None
             break
 
-    if not client_name:
+    if not client_info:
         sys.exit()
 
-    return client_name
+    return client_info
 
 
-def _update_client(client_id: str):
-    if client_id in clients:
-        new_client_name: str = input('\bUpdate client name: ')
+def _update_client(client_id: list):
+    validator = client_id[0]
+    index = client_id[1]
 
-        index = clients.index(client_id)
-        clients[index] = new_client_name
+    if validator:
+        new_client: dict = _get_client_data()
+
+        clients[index] = new_client
     else:
         print('Client is not in the client list.')
 
@@ -79,13 +137,15 @@ def _read_clients():
     if chose == 's':
         list_clients()
     elif chose == 'f':
-        target = _get_client_name()
-        if target in clients:
-            print(f'The client {target} was found!')
+        target, index = _get_client_id()
+
+        if target:
+            client = clients[index]
+            print(f'The client {client["name"]} was found!')
         else:
             print(f'The client was not found')
     else:
-        print('Ups! We don\'t have that option. \bPlease send feedback at @maucoder on twitter to more updates!')
+        print('Ups! We don\'t have that option.\nPlease send feedback at @maucoder on twitter to more updates!')
 
 
 def _print_welcome():
@@ -100,7 +160,7 @@ def _print_welcome():
 
 def list_clients():
     for idx, client in enumerate(clients):
-        print(f'{idx}: {client}')
+        print(f'{idx}: {client["name"]}')
 
 
 def run():
@@ -115,11 +175,11 @@ def run():
     elif command == 'r':
         _read_clients()
     elif command == 'd':
-        client = _get_client_name()
+        client = _get_client_id()
 
         _delete_client(client)
     elif command == 'u':
-        client = _get_client_name()
+        client = _get_client_id()
         _update_client(client)
 
         list_clients()
