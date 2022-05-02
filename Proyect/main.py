@@ -1,18 +1,29 @@
+import os
 import sys
-clients: list = [
-    {
-        'name': 'Pablo',
-        'company': 'Google',
-        'email': 'pablo@google.com',
-        'position': 'Software engineer',
-    },
-    {
-        'name': 'Mauricio',
-        'company': 'Reserve',
-        'email': 'mauricio@reserve.com',
-        'position': 'Backend developer',
-    }
-]
+import csv
+
+
+CLIENT_TABLE = '.client.csv'
+CLIENT_SCHEMA = {'name', 'company', 'email', 'position'}
+clients: list = []
+
+
+def _initialize_clients_from_store():
+    with open(CLIENT_TABLE, mode='r') as f:
+        reader = csv.DictReader(f, fieldnames=CLIENT_SCHEMA)
+
+        for row in reader:
+            clients.append(row)
+
+
+def _save_client_to_storage():
+    tmp_table_name = f'{CLIENT_TABLE}.tmp'
+    with open(tmp_table_name, mode='w') as f:
+        writer = csv.DictWriter(f, fieldnames=CLIENT_SCHEMA)
+        writer.writerows(clients)
+
+    os.remove(CLIENT_TABLE)
+    os.rename(tmp_table_name, CLIENT_TABLE)
 
 
 def _get_client_data():
@@ -61,7 +72,7 @@ def _delete_client(client_id):
                 print(f'{index}: {clients[index]} was delete')
 
                 del(clients[index])
-                list_clients()
+                
                 break
             elif confirm == "NO":
                 print("Stopping...")
@@ -164,28 +175,27 @@ def list_clients():
 
 
 def run():
-    global clients
+    _initialize_clients_from_store()
+    
     _print_welcome()
 
     command = input("\nYour chose: ").lower()
     
     if command == 'c':
         _create_client()
-        list_clients()
     elif command == 'r':
         _read_clients()
     elif command == 'd':
         client = _get_client_id()
-
         _delete_client(client)
     elif command == 'u':
         client = _get_client_id()
         _update_client(client)
-
-        list_clients()
     else:
         print('Invalid command, please select an available option')
 
+    _save_client_to_storage()
+    
 
 if __name__ == '__main__':
     run()
