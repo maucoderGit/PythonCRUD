@@ -69,7 +69,7 @@ def _delete_client(client_id):
         while True:
             confirm = input(f"Are you secure to remove {client['name']} from client\'s data?: ").upper()
             if confirm == "YES":
-                print(f'{index}: {clients[index]} was delete')
+                print(f'{index}: {client["name"]} was delete')
 
                 del(clients[index])
                 
