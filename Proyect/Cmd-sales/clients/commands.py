@@ -1,5 +1,8 @@
 import click
+from tabulate import tabulate
 
+from clients.services import ClientService
+from clients.models import Clients
 
 @click.group()
 def clients():
@@ -8,8 +11,24 @@ def clients():
 
 
 @clients.command()
+@click.option('-n', '--name',
+              type=str,
+              prompt= True,
+              help='The client name')
+@click.option('-n', '--company',
+              type=str,
+              prompt= True,
+              help='The client company')
+@click.option('-n', '--email',
+              type=str,
+              prompt= True,
+              help='The client email')
+@click.option('-n', '--position',
+              type=str,
+              prompt= True,
+              help='The client position')
 @click.pass_context
-def create(context, name, company, email, position):
+def create(ctx, name, company, email, position):
     """Creates a new client
 
     Args:
@@ -19,19 +38,32 @@ def create(context, name, company, email, position):
         email (str): user's email
         position (str): user's position
     """
-    pass
+    client = Clients(name, company, email, position)
+    client_service = ClientService(ctx.obj['clients_table'])
+    
+    client_service.create_client(client)
 
 
 @clients.command()
 @click.pass_context
-def lists(context):
-    """List all clients
+def lists(ctx):
+    """List all clients"""
+    client_service = ClientService(ctx.obj['clients_table'])
+    clients_list = client_service.list_clients()
 
-    Args:
-        context (_type_): _description_
-    """
-    pass
+    headers = [field.capitalize() for field in Clients.schema()]
+    table = []
 
+    for client in clients_list:
+        table.append(
+            [client['name'],
+             client['company'],
+             client['email'],
+             client['position'],
+             client['uid']])
+
+    print(tabulate(table, headers))
+    
 
 @clients.command()
 @click.pass_context
